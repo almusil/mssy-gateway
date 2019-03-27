@@ -15,7 +15,7 @@
 DEVICE     = atmega256rfr2
 CLOCK      = 8000000
 PROGRAMMER = -c xplainedpro -P usb
-OBJECTS    = src/main.o
+OBJECTS    = src/main.o src/common/command_context.o
 FUSES      = -U lfuse:w:0xc2:m -U hfuse:w:0x95:m -U efuse:w:0xfe:m
 
 

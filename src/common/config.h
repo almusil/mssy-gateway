@@ -8,13 +8,7 @@
 #define APP_PANID                 0x4567
 #define APP_ENDPOINT              13
 
-#define APP_CHANNEL             0x0f
-
-
-#define HAL_UART_CHANNEL          1
-#define HAL_UART_RX_FIFO_SIZE     200
-#define HAL_UART_TX_FIFO_SIZE     200
-
+#define APP_CHANNEL               0x0f
 
 #define NWK_BUFFERS_AMOUNT                  3
 #define NWK_DUPLICATE_REJECTION_TABLE_SIZE  10

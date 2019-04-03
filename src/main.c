@@ -7,9 +7,8 @@
 #include "sys.h"
 #include "nwk.h"
 #include "sysTimer.h"
-#include "halBoard.h"
-#include "halUart.h"
-#include "common/protocols.h"
+#include "protocols.h"
+#include "uart.h"
 
 #define APP_BUFFER_SIZE     (NWK_MAX_PAYLOAD_SIZE - NWK_SECURITY_MIC_SIZE)
 
@@ -20,6 +19,9 @@ void println(char *str);
 static NWK_DataReq_t appDataReq;
 static uint8_t data_buffer[APP_BUFFER_SIZE];
 static uint8_t buffer_position = 0;
+
+char uart_buffer[UART_BUFFER_LEN];
+volatile uint8_t uart_int = 0;
 
 static void data_confirmation(NWK_DataReq_t *req) {
 	memset(data_buffer, 0, APP_BUFFER_SIZE);
@@ -44,16 +46,9 @@ static void send_data(void *data, size_t length) {
 	buffer_position = 0;
 }
 
-void HAL_UartBytesReceived(uint16_t bytes) {
-	for (uint16_t i = 0; i < bytes; i++) {
-		uint8_t byte = HAL_UartReadByte();
-		HAL_UartWriteByte(byte);
-	}
-}
-
 static bool data_received(NWK_DataInd_t *ind) {
 	for (uint8_t i = 0; i < ind->size; i++)
-		HAL_UartWriteByte(ind->data[i]);
+        uart_send(ind->data[i]);
 	return true;
 }
 
@@ -66,29 +61,28 @@ static void app_init(void) {
 
 	NWK_OpenEndpoint(APP_ENDPOINT, data_received);
 
-	HAL_BoardInit();
+    uart_init(38400);
 }
 
 static void task_handler(void) {
-	
+    if (uart_int) {
+        memset((void *) uart_buffer, 0, UART_BUFFER_LEN);
+        uart_recv_string((void *) uart_buffer);
+    }
 }
 
 int main() {
 	SYS_Init();
-	HAL_UartInit(38400);
 	app_init();
 
 	while (1) {
 		SYS_TaskHandler();
-		HAL_UartTaskHandler();
 		task_handler();
 	}
 }
 
 void print(char *str) {
-    for (int i = 0; i < strlen(str); i++) {
-        HAL_UartWriteByte(str[i]);
-    }
+    uart_send_string(str);
 }
 
 void println(char *str) {

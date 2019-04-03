@@ -17,6 +17,7 @@ CLOCK      = 8000000
 PROGRAMMER = -c xplainedpro -P usb
 OBJECTS    = src/main.o \
 src/common/command_context.o \
+src/common/uart.o \
 $(STACK_PATH)/hal/atmega256rfr2/src/hal.o \
 $(STACK_PATH)/hal/atmega256rfr2/src/halTimer.o \
 $(STACK_PATH)/phy/atmegarfr2/src/phy.o \
@@ -31,8 +32,7 @@ $(STACK_PATH)/nwk/src/nwkRx.o \
 $(STACK_PATH)/nwk/src/nwkTx.o \
 $(STACK_PATH)/sys/src/sys.o \
 $(STACK_PATH)/sys/src/sysTimer.o \
-$(STACK_PATH)/sys/src/sysEncrypt.o \
-$(STACK_PATH)/hal/drivers/atmega256rfr2/halUart.o
+$(STACK_PATH)/sys/src/sysEncrypt.o
 
 INCLUDES = -Isrc/common/ \
 -I$(STACK_PATH)/hal/atmega256rfr2/inc \

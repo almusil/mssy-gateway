@@ -85,7 +85,9 @@ int main() {
 }
 
 void print(char *str) {
-    // Do nothing
+    for (int i = 0; i < strlen(str); i++) {
+        HAL_UartWriteByte(str[i]);
+    }
 }
 
 void println(char *str) {

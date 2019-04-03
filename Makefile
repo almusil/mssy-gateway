@@ -15,7 +15,32 @@
 DEVICE     = atmega256rfr2
 CLOCK      = 8000000
 PROGRAMMER = -c xplainedpro -P usb
-OBJECTS    = src/main.o src/common/command_context.o
+OBJECTS    = src/main.o \
+src/common/command_context.o \
+$(STACK_PATH)/hal/atmega256rfr2/src/hal.o \
+$(STACK_PATH)/hal/atmega256rfr2/src/halTimer.o \
+$(STACK_PATH)/phy/atmegarfr2/src/phy.o \
+$(STACK_PATH)/nwk/src/nwk.o \
+$(STACK_PATH)/nwk/src/nwkDataReq.o \
+$(STACK_PATH)/nwk/src/nwkSecurity.o \
+$(STACK_PATH)/nwk/src/nwkFrame.o \
+$(STACK_PATH)/nwk/src/nwkGroup.o \
+$(STACK_PATH)/nwk/src/nwkRoute.o \
+$(STACK_PATH)/nwk/src/nwkRouteDiscovery.o \
+$(STACK_PATH)/nwk/src/nwkRx.o \
+$(STACK_PATH)/nwk/src/nwkTx.o \
+$(STACK_PATH)/sys/src/sys.o \
+$(STACK_PATH)/sys/src/sysTimer.o \
+$(STACK_PATH)/sys/src/sysEncrypt.o \
+$(STACK_PATH)/hal/drivers/atmega256rfr2/halUart.o
+
+INCLUDES = -Isrc/common/ \
+-I$(STACK_PATH)/hal/atmega256rfr2/inc \
+-I$(STACK_PATH)/phy/atmegarfr2/inc \
+-I$(STACK_PATH)/nwk/inc \
+-I$(STACK_PATH)/sys/inc \
+-I$(STACK_PATH)/hal/drivers/atmega256rfr2
+
 FUSES      = -U lfuse:w:0xc2:m -U hfuse:w:0x95:m -U efuse:w:0xfe:m
 
 
@@ -25,7 +50,8 @@ FUSES      = -U lfuse:w:0xc2:m -U hfuse:w:0x95:m -U efuse:w:0xfe:m
 # Tune the lines below only if you know what you are doing:
 
 AVRDUDE = avrdude $(PROGRAMMER) -p $(DEVICE)
-COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
+COMPILE = avr-gcc $(INCLUDES) -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE) \
+-DPHY_ATMEGARFR2 -DHAL_ATMEGA256RFR2 -DPLATFORM_XPLAINED_PRO_ATMEGA256RFR2
 
 # symbolic targets:
 all:	main.hex

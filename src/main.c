@@ -9,6 +9,7 @@
 #include "sysTimer.h"
 #include "halBoard.h"
 #include "halUart.h"
+#include "common/protocols.h"
 
 #define APP_BUFFER_SIZE     (NWK_MAX_PAYLOAD_SIZE - NWK_SECURITY_MIC_SIZE)
 

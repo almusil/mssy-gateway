@@ -1,6 +1,8 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
+#define APP_BUFFER_SIZE     (NWK_MAX_PAYLOAD_SIZE - NWK_SECURITY_MIC_SIZE)
+
 // Address must be set to 0 for the first device, and to 1 for the second one.
 #define APP_ADDR                  0
 #define APP_PANID                 0x4567

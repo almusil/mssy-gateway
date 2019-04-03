@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include "config.h"
 
 #ifndef MSSY_GATEWAY_PROTOCOLS_H
 #define MSSY_GATEWAY_PROTOCOLS_H
@@ -25,18 +26,40 @@
 #define DEVICE_TYPE_SLEEP 2
 #define DEVICE_TYPE_TIMER 1
 
-struct command_t {
-    uint8_t command_id,
-    size_t len,
-    void *data
+struct command_header_t {
+    uint8_t command_id;
+    size_t len;
 };
 
+#define COMMAND_DATA_BUFFER APP_BUFFER_SIZE - sizeof(struct command_header_t)
+
+struct command_t {
+    struct command_header_t header;
+    uint8_t data[COMMAND_DATA_BUFFER];
+};
+
+struct device_header_t {
+    uint8_t device_type;
+    uint8_t r_w;
+    uint8_t device_id;
+    uint8_t len;
+};
+
+#define DEVICE_DATA_BUFFER COMMAND_DATA_BUFFER - sizeof(struct device_header_t)
+
 struct device_t {
-    uint8_t device_type,
-    uint8_t r_w,
-    uint8_t device_id,
-    uint8_t len,
-    void *data
+    struct device_header_t header;
+    uint8_t data[DEVICE_DATA_BUFFER];
+};
+
+union command_packet_t {
+    struct command_t command;
+    uint8_t bytes[sizeof(struct command_t)];
+};
+
+union device_packet_t {
+    struct device_t device;
+    uint8_t bytes[sizeof(struct device_t)];
 };
 
 #endif //PROJEKT2_COMMAND_CONTEXT_H

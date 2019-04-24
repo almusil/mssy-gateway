@@ -1,7 +1,7 @@
 #include "database.h"
 
 struct row_t {
-    uint8_t app_endpoint;
+    uint16_t app_endpoint;
     struct device_header_t devices[DEVICE_COUNT];
     uint8_t is_free;
 };
@@ -17,7 +17,7 @@ void init_database() {
     }
 }
 
-int8_t add_endpoint(uint8_t endpoint) {
+int8_t add_endpoint(uint16_t endpoint) {
     if (index_of(endpoint) != ERR_NOT_FOUND) {
         return ERR_ENDPOINT_EXISTS;
     }
@@ -44,10 +44,10 @@ void print_endpoints() {
     }
 }
 
-void remove_endpoint(uint8_t endpoint) {
+void remove_endpoint(uint16_t endpoint) {
     int8_t index = index_of(endpoint);
 
-    if(index == ERR_NOT_FOUND) {
+    if (index == ERR_NOT_FOUND) {
         return;
     }
 
@@ -57,7 +57,7 @@ void remove_endpoint(uint8_t endpoint) {
     rows[index] = row;
 }
 
-int8_t index_of(uint8_t endpoint) {
+int8_t index_of(uint16_t endpoint) {
     for (int i = 0; i < DEVICE_COUNT; i++) {
         if (!rows[i].is_free && rows[i].app_endpoint == endpoint) {
             return i;
@@ -66,7 +66,7 @@ int8_t index_of(uint8_t endpoint) {
     return ERR_NOT_FOUND;
 }
 
-void store_devices(uint8_t endpoint, void *devices, size_t len) {
+void store_devices(uint16_t endpoint, void *devices, size_t len) {
     struct row_t *current = &rows[index_of(endpoint)];
 
     size_t header_len = sizeof(struct device_header_t);
@@ -87,7 +87,7 @@ void store_devices(uint8_t endpoint, void *devices, size_t len) {
     }
 }
 
-void print_devices(uint8_t endpoint) {
+void print_devices(uint16_t endpoint) {
     struct row_t *current = &rows[index_of(endpoint)];
 
     printf("-- Stored devices -- \n");
@@ -100,19 +100,19 @@ void print_devices(uint8_t endpoint) {
     }
 }
 
-struct device_header_t *get_devices(uint8_t endpoint) {
+struct device_header_t *get_devices(uint16_t endpoint) {
     struct row_t *current = &rows[index_of(endpoint)];
     return current->devices;
 }
 
-int8_t has_endpoint_device(uint8_t endpoint, uint8_t device_index) {
-	if (device_index < DEVICE_COUNT) {
-		struct row_t *endpoint_row = &rows[index_of(endpoint)];
-		struct device_header_t header = endpoint_row->devices[device_index];
-		
-		if (header.device_type) {
-			return SUCCESS;
-		}
-	}
-	return ERR_NOT_FOUND;
+int8_t has_endpoint_device(uint16_t endpoint, uint8_t device_index) {
+    if (device_index < DEVICE_COUNT) {
+        struct row_t *endpoint_row = &rows[index_of(endpoint)];
+        struct device_header_t header = endpoint_row->devices[device_index];
+
+        if (header.device_type) {
+            return SUCCESS;
+        }
+    }
+    return ERR_NOT_FOUND;
 }

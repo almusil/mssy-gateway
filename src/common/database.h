@@ -16,20 +16,20 @@
 
 void init_database();
 
-int8_t add_endpoint(uint8_t endpoint);
+int8_t add_endpoint(uint16_t endpoint);
 
 void print_endpoints();
 
-void print_devices(uint8_t endpoint);
+void print_devices(uint16_t endpoint);
 
-int8_t index_of(uint8_t endpoint);
+int8_t index_of(uint16_t endpoint);
 
-void store_devices(uint8_t endpoint, void *devices, size_t len);
+void store_devices(uint16_t endpoint, void *devices, size_t len);
 
-void remove_endpoint(uint8_t endpoint);
+void remove_endpoint(uint16_t endpoint);
 
-struct device_header_t *get_devices(uint8_t endpoint);
+struct device_header_t *get_devices(uint16_t endpoint);
 
-int8_t has_endpoint_device(uint8_t endpoint, uint8_t device_index);
+int8_t has_endpoint_device(uint16_t endpoint, uint8_t device_index);
 
 #endif //MSSY_GATEWAY_DATABASE_H

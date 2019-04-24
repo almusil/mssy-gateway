@@ -76,6 +76,7 @@ static void handle_interrupt() {
     if (buffer_pos == UART_BUFFER_LEN - 1 || tmp == '\n' || tmp == '\r') {
         // Insert terminating char
         buffer[UART_BUFFER_LEN - 1] = '\0';
+        uart_send_string("\r\n");
         uart_int = 1;
     } else {
         buffer[buffer_pos++] = tmp;
